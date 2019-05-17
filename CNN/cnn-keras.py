@@ -7,28 +7,8 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 import numpy as np
 import csv
+from matplotlib import pyplot
 
-
-# def model_1():
-#     """ 
-#         This model has 2 convolutional layers, 2 pooling layers, and 2 Fully Connected (or Dense) layers.
-#         Also, it is using ReLU activation.
-#     """
-#     model = Sequential()
-#     model.add(Conv2D(32, kernel_size=(3, 3),
-#                     activation='relu',
-#                     input_shape=input_shape))
-#     model.add(Conv2D(64, (3, 3), activation='relu'))
-#     model.add(MaxPooling2D(pool_size=(2, 2)))
-#     model.add(Dropout(0.25)) # To prevent overfitting.
-#     model.add(Flatten())
-#     model.add(Dense(128, activation='relu'))
-#     model.add(Dropout(0.5))
-#     model.add(Dense(num_classes, activation='softmax'))
-#     model.compile(loss=keras.losses.categorical_crossentropy,
-#               optimizer=keras.optimizers.Adadelta(),
-#               metrics=['accuracy'])
-#     return model
 
 def sequential_model(layers, learning_rate, loss_type, input_shape):
     """
@@ -58,7 +38,6 @@ def sequential_model(layers, learning_rate, loss_type, input_shape):
         print(v)
         if k.startswith("Conv"):
             if v['is_input_shape'] == True:
-                print('IN')
                 model.add(Conv2D(v['filter'], v['size_of_filter'], activation=v['activation'], input_shape=input_shape))
             else:
                 model.add(Conv2D(v['filter'], v['size_of_filter'], activation=v['activation']))
@@ -127,14 +106,6 @@ if __name__ == "__main__":
 
     
 
-#     with open('keras.csv', 'w') as csvfile:
-#         fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
-#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-#         writer.writeheader() # apenas fazer uma vez.
-
-#         writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
-#             'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
-#                 'num_fc_nodes': num_nodes_fc1})
 
     layers = {
         'Conv_1': {
@@ -166,11 +137,20 @@ if __name__ == "__main__":
     }
 
     model = sequential_model(layers, 0.01, keras.losses.categorical_crossentropy, input_shape)
-    model.fit(x_train, y_train,
+    history = model.fit(x_train, y_train,
             batch_size=batch_size,
             epochs=epochs,
             verbose=1,
             validation_data=(x_test, y_test))
 
     score = model.evaluate(x_test, y_test, verbose=1)
-    print(model.summary())
+    pyplot.plot(history.history['accuracy'])
+
+    with open('keras.csv', 'w') as csvfile:
+        fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
+            'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
+                'num_fc_nodes': num_nodes_fc1})
+    pyplot.show()
