@@ -1,1 +1,1 @@
-model_name,model_iteration,batch_size,epoch,accuracy,loss,num_layers,num_filters,num_fc_nodes
+cnn-keras1,1,128,5,0.9846,0.05315028131466242,2,32_64,128
