@@ -9,27 +9,70 @@ import numpy as np
 import csv
 
 
-def model_1():
-    """ 
-        This model has 2 convolutional layers, 2 pooling layers, and 2 Fully Connected (or Dense) layers.
-        Also, it is using ReLU activation.
-    """
-    model = Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3),
-                    activation='relu',
-                    input_shape=input_shape))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25)) # To prevent overfitting.
-    model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_classes, activation='softmax'))
-    model.compile(loss=keras.losses.categorical_crossentropy,
-              optimizer=keras.optimizers.Adadelta(),
-              metrics=['accuracy'])
-    return model
+# def model_1():
+#     """ 
+#         This model has 2 convolutional layers, 2 pooling layers, and 2 Fully Connected (or Dense) layers.
+#         Also, it is using ReLU activation.
+#     """
+#     model = Sequential()
+#     model.add(Conv2D(32, kernel_size=(3, 3),
+#                     activation='relu',
+#                     input_shape=input_shape))
+#     model.add(Conv2D(64, (3, 3), activation='relu'))
+#     model.add(MaxPooling2D(pool_size=(2, 2)))
+#     model.add(Dropout(0.25)) # To prevent overfitting.
+#     model.add(Flatten())
+#     model.add(Dense(128, activation='relu'))
+#     model.add(Dropout(0.5))
+#     model.add(Dense(num_classes, activation='softmax'))
+#     model.compile(loss=keras.losses.categorical_crossentropy,
+#               optimizer=keras.optimizers.Adadelta(),
+#               metrics=['accuracy'])
+#     return model
 
+def sequential_model(layers, learning_rate, loss_type, input_shape):
+    """
+        This creates a model, when given a layers dictionary, a learning rate optimizes and a loss type.
+
+        Args:
+            - layers: a dict. Each layer has the following keys:
+                - type: FC, Conv, Pool;
+                - If type = Conv:
+                    - filters: a int, with the number of filters of this convolutional layer.
+                    - size_of_filter: a tuple, that contains the size of the filter.
+                    - activation: a string, with the type of activation to be used.
+                    - is_input_shape: a bool, to check if the layer is the first.
+                - If type = Pool:
+                    - size_of_filter: a tuple, with the size of the filter to be used.
+                - If type = FC:
+                    - numb_of_nodes: a int, the number of nodes to be used in the layer.
+                    - activation: a string, with the type of activation to be used.
+
+            - learning_rate: a float, containing the size of the step to be used by the optimizer algorithm.
+            - loss_type: a string, containing the algorithm that will calculate the loss. 
+    """
+    print('Creating the model...')
+    model = Sequential()
+    for k,v in layers.items():
+        print(k)
+        print(v)
+        if k.startswith("Conv"):
+            if v['is_input_shape'] == True:
+                print('IN')
+                model.add(Conv2D(v['filter'], v['size_of_filter'], activation=v['activation'], input_shape=input_shape))
+            else:
+                model.add(Conv2D(v['filter'], v['size_of_filter'], activation=v['activation']))
+        elif k.startswith('Pool'):
+            model.add(MaxPooling2D(v['size_of_filter']))
+        elif k.startswith('FC'):
+            if k.endswith('1'):
+                model.add(Dropout(0.25)) # To prevent overfitting.
+                model.add(Flatten())
+            model.add(Dense(v['numb_of_nodes'], activation=v['activation']))
+    
+    model.compile(loss=loss_type, optimizer=keras.optimizers.Adam(lr=learning_rate), metrics=['accuracy'])
+    print('Model Created.')
+    return model
 
 if __name__ == "__main__":
 
@@ -82,7 +125,47 @@ if __name__ == "__main__":
     y_train = keras.utils.to_categorical(y_train, num_classes)
     y_test = keras.utils.to_categorical(y_test, num_classes)
 
-    model = model_1()
+    
+
+#     with open('keras.csv', 'w') as csvfile:
+#         fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
+#         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#         writer.writeheader() # apenas fazer uma vez.
+
+#         writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
+#             'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
+#                 'num_fc_nodes': num_nodes_fc1})
+
+    layers = {
+        'Conv_1': {
+            'filter': 32,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': True
+        },
+        'Pool_1': {
+            'size_of_filter': (2,2)
+        },
+        'Conv_2': {    
+            'filter': 64,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': False
+        },
+        'Pool_2': {
+            'size_of_filter': (2,2)
+        },
+        'FC_1': {
+            'numb_of_nodes': 128,
+            'activation': 'relu'
+        },
+        'FC_2': {
+            'numb_of_nodes': 10,
+            'activation': 'softmax'
+        }
+    }
+
+    model = sequential_model(layers, 0.01, keras.losses.categorical_crossentropy, input_shape)
     model.fit(x_train, y_train,
             batch_size=batch_size,
             epochs=epochs,
@@ -90,14 +173,4 @@ if __name__ == "__main__":
             validation_data=(x_test, y_test))
 
     score = model.evaluate(x_test, y_test, verbose=1)
-
-    with open('keras.csv', 'w') as csvfile:
-        fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader() # apenas fazer uma vez.
-
-        writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
-            'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
-                'num_fc_nodes': num_nodes_fc1})
-
-        
+    print(model.summary())
