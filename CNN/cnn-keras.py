@@ -144,7 +144,9 @@ if __name__ == "__main__":
             validation_data=(x_test, y_test))
 
     score = model.evaluate(x_test, y_test, verbose=1)
-    pyplot.plot(history.history['accuracy'])
+    print(history)
+    pyplot.plot(history.history['acc'], marker='', color='red', linestyle='dashed')
+    pyplot.plot(history.history['loss'], marker='', color='green')
 
     with open('keras.csv', 'w') as csvfile:
         fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
@@ -153,4 +155,5 @@ if __name__ == "__main__":
         writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
             'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
                 'num_fc_nodes': num_nodes_fc1})
+    
     pyplot.show()
