@@ -1,0 +1,103 @@
+from __future__ import print_function
+import keras
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import numpy as np
+import csv
+
+
+def model_1():
+    """ 
+        This model has 2 convolutional layers, 2 pooling layers, and 2 Fully Connected (or Dense) layers.
+        Also, it is using ReLU activation.
+    """
+    model = Sequential()
+    model.add(Conv2D(32, kernel_size=(3, 3),
+                    activation='relu',
+                    input_shape=input_shape))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25)) # To prevent overfitting.
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes, activation='softmax'))
+    model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+    return model
+
+
+if __name__ == "__main__":
+
+    testName = 'cnn-keras1'
+    modelIteration = '1'
+    batch_size = 128
+    num_classes = 10
+    epochs = 5
+    num_layers = 2
+    num_filters1 = 32
+    num_filters2 = 64
+    num_nodes_fc1 = 128
+
+    # input image dimensions
+    img_rows, img_cols = 28, 28
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+    # Shape of the Dataset
+    # x_train: 60000, 28, 28
+    # y_train: 60000
+    # x_test: 10000, 28, 28
+    # y_test: 10000.
+
+    # The x arrays are the arrays with the images, and the y arrays have the labels.
+
+    # Now, we need to reshape the arrays to pass through the model.
+    # So we reshape the arrays from a 3D array of 60000, 28, 28, to a 4D array with a shape of 60000, 28, 28, 1. 
+    print(K.image_data_format())
+    if K.image_data_format() == 'channels_first':
+        x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
+        x_test = x_test.reshape(x_test.shape[0], 1, img_rows, img_cols)
+        input_shape = (1, img_rows, img_cols)
+    else:
+        x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+        x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+        input_shape = (img_rows, img_cols, 1)
+
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    
+    # Now we make sure that all the numbers in the array in the range of 0, 255
+    x_train /= 255
+    x_test /= 255
+
+    print('x_train shape:', x_train.shape)
+    print(x_train.shape[0], 'train samples')
+    print(x_test.shape[0], 'test samples')
+
+    # convert class vectors to binary class matrices
+    y_train = keras.utils.to_categorical(y_train, num_classes)
+    y_test = keras.utils.to_categorical(y_test, num_classes)
+
+    model = model_1()
+    model.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1,
+            validation_data=(x_test, y_test))
+
+    score = model.evaluate(x_test, y_test, verbose=1)
+
+    with open('keras.csv', 'w') as csvfile:
+        fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader() # apenas fazer uma vez.
+
+        writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
+            'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
+                'num_fc_nodes': num_nodes_fc1})
+
+        
