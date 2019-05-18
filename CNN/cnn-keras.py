@@ -59,7 +59,7 @@ if __name__ == "__main__":
     modelIteration = '1'
     batch_size = 128
     num_classes = 10
-    epochs = 3
+    epochs = 1
     num_layers = 2
     num_filters1 = 32
     num_filters2 = 64
@@ -289,40 +289,40 @@ if __name__ == "__main__":
 
 
     # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
-    pyplot.figure(1)
-    a1 = pyplot.subplot(221)
-    a1.plot(history_1.history['acc'], marker='', color='green')
-    a1.plot(history_2.history['acc'], marker='', color='blue')
-    a1.plot(history_3.history['acc'], marker='', color='red')
-    a1.plot(history_4.history['acc'], marker='', color='pink')
-    a1.plot(history_5.history['acc'], marker='', color='yellow')
+    fig, ((a1, a2), (a3, a4)) = pyplot.subplots(2,2)
+
+    a1.plot(history_1.history['acc'], marker='', color='green', linestyle=':')
+    a1.plot(history_2.history['acc'], marker='', color='blue', linestyle='-.')
+    a1.plot(history_3.history['acc'], marker='', color='red', linestyle='--')
+    a1.plot(history_4.history['acc'], marker='', color='pink', linestyle='-')
+    a1.plot(history_5.history['acc'], marker='', color='yellow', linestyle='o')
     a1.title.set_text('Accuracy')
 
-    a2 = pyplot.subplot(222)
-    a2.plot(history_1.history['loss'], marker='', color='green')
-    a2.plot(history_2.history['loss'], marker='', color='blue')
-    a2.plot(history_3.history['loss'], marker='', color='red')
-    a2.plot(history_4.history['loss'], marker='', color='pink')
-    a2.plot(history_5.history['loss'], marker='', color='yellow')
+
+    a2.plot(history_1.history['loss'], marker='', color='green', linestyle=':')
+    a2.plot(history_2.history['loss'], marker='', color='blue', linestyle='-.')
+    a2.plot(history_3.history['loss'], marker='', color='red', linestyle='--')
+    a2.plot(history_4.history['loss'], marker='', color='pink', linestyle='-')
+    a2.plot(history_5.history['loss'], marker='', color='yellow', linestyle='o')
     a2.title.set_text('Loss')
 
-    a3 = pyplot.subplot(223)
-    a3.plot(history_1.history['val_acc'], marker='', color='green')
-    a3.plot(history_2.history['val_acc'], marker='', color='blue')
-    a3.plot(history_3.history['val_acc'], marker='', color='red')
-    a3.plot(history_4.history['val_acc'], marker='', color='pink')
-    a3.plot(history_5.history['val_acc'], marker='', color='yellow')
+    a3.plot(history_1.history['val_acc'], marker='', color='green', linestyle=':')
+    a3.plot(history_2.history['val_acc'], marker='', color='blue', linestyle='-.')
+    a3.plot(history_3.history['val_acc'], marker='', color='red', linestyle='--')
+    a3.plot(history_4.history['val_acc'], marker='', color='pink', linestyle='-')
+    a3.plot(history_5.history['val_acc'], marker='', color='yellow', linestyle='o')
     a3.title.set_text('Val Accuracy')
 
-    a4 = pyplot.subplot(224)
-    a4.plot(history_1.history['val_loss'], marker='', color='green')
-    a4.plot(history_2.history['val_loss'], marker='', color='blue')
-    a4.plot(history_3.history['val_loss'], marker='', color='red')
-    a4.plot(history_4.history['val_loss'], marker='', color='pink')
-    a4.plot(history_5.history['val_loss'], marker='', color='yellow')
+    a4.plot(history_1.history['val_loss'], marker='', color='green', linestyle=':')
+    a4.plot(history_2.history['val_loss'], marker='', color='blue', linestyle='-.')
+    a4.plot(history_3.history['val_loss'], marker='', color='red', linestyle='--')
+    a4.plot(history_4.history['val_loss'], marker='', color='pink', linestyle='-')
+    a4.plot(history_5.history['val_loss'], marker='', color='yellow', linestyle='o')
     a4.title.set_text('Val Loss')
+    
+    fig.tight_layout()
 
-    pyplot.suptitle('Epoch = 3')
+    fig.suptitle('Epoch = 10')
     # with open('keras.csv', 'w') as csvfile:
     #     fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
     #     writer = csv.DictWriter(csvfile))
