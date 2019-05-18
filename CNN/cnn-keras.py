@@ -292,16 +292,16 @@ if __name__ == "__main__":
     pyplot.subplot(211)
     pyplot.plot(history_1.history['acc'], marker='', color='green')
     pyplot.plot(history_2.history['acc'], marker='', color='blue')
-    pyplot.plot(history_3.history['acc'], marker='', color='green')
-    pyplot.plot(history_4.history['acc'], marker='', color='blue')
-    pyplot.plot(history_5.history['acc'], marker='', color='blue')
+    pyplot.plot(history_3.history['acc'], marker='', color='red')
+    pyplot.plot(history_4.history['acc'], marker='', color='pink')
+    pyplot.plot(history_5.history['acc'], marker='', color='yellow')
 
     pyplot.subplot(212)
     pyplot.plot(history_1.history['loss'], marker='', color='green')
     pyplot.plot(history_2.history['loss'], marker='', color='blue')
-    pyplot.plot(history_3.history['loss'], marker='', color='green')
-    pyplot.plot(history_4.history['loss'], marker='', color='blue')
-    pyplot.plot(history_5.history['loss'], marker='', color='blue')
+    pyplot.plot(history_3.history['loss'], marker='', color='red')
+    pyplot.plot(history_4.history['loss'], marker='', color='pink')
+    pyplot.plot(history_5.history['loss'], marker='', color='yellow')
 
     # with open('keras.csv', 'w') as csvfile:
     #     fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
