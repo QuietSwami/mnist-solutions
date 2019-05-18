@@ -296,7 +296,6 @@ if __name__ == "__main__":
     a1.plot(history_3.history['acc'], marker='', color='red')
     a1.plot(history_4.history['acc'], marker='', color='pink')
     a1.plot(history_5.history['acc'], marker='', color='yellow')
-    a1.tight_layout()
     a1.title.set_text('Accuracy')
 
     a2 = pyplot.subplot(222)
@@ -305,7 +304,6 @@ if __name__ == "__main__":
     a2.plot(history_3.history['loss'], marker='', color='red')
     a2.plot(history_4.history['loss'], marker='', color='pink')
     a2.plot(history_5.history['loss'], marker='', color='yellow')
-    a2.tight_layout()
     a2.title.set_text('Loss')
 
     a3 = pyplot.subplot(223)
@@ -314,7 +312,6 @@ if __name__ == "__main__":
     a3.plot(history_3.history['val_acc'], marker='', color='red')
     a3.plot(history_4.history['val_acc'], marker='', color='pink')
     a3.plot(history_5.history['val_acc'], marker='', color='yellow')
-    a3.tight_layout()
     a3.title.set_text('Val Accuracy')
 
     a4 = pyplot.subplot(224)
@@ -323,7 +320,6 @@ if __name__ == "__main__":
     a4.plot(history_3.history['val_loss'], marker='', color='red')
     a4.plot(history_4.history['val_loss'], marker='', color='pink')
     a4.plot(history_5.history['val_loss'], marker='', color='yellow')
-    a4.tight_layout()
     a4.title.set_text('Val Loss')
 
     pyplot.suptitle('Epoch = 3')
