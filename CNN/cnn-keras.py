@@ -165,6 +165,93 @@ if __name__ == "__main__":
         }
     }
 
+    layers_3 = {
+        'Conv_1': {
+            'filter': 4,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': True
+        },
+        'Pool_1': {
+            'size_of_filter': (2,2)
+        },
+        'Conv_2': {    
+            'filter': 8,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': False
+        },
+        'Pool_2': {
+            'size_of_filter': (2,2)
+        },
+        'FC_1': {
+            'numb_of_nodes': 128,
+            'activation': 'relu'
+        },
+        'FC_2': {
+            'numb_of_nodes': 10,
+            'activation': 'softmax'
+        }
+    }
+
+    layers_4 = {
+        'Conv_1': {
+            'filter': 8,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': True
+        },
+        'Pool_1': {
+            'size_of_filter': (2,2)
+        },
+        'Conv_2': {    
+            'filter': 16,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': False
+        },
+        'Pool_2': {
+            'size_of_filter': (2,2)
+        },
+        'FC_1': {
+            'numb_of_nodes': 128,
+            'activation': 'relu'
+        },
+        'FC_2': {
+            'numb_of_nodes': 10,
+            'activation': 'softmax'
+        }
+    }
+
+    layers_5 = {
+        'Conv_1': {
+            'filter': 16,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': True
+        },
+        'Pool_1': {
+            'size_of_filter': (2,2)
+        },
+        'Conv_2': {    
+            'filter': 32,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': False
+        },
+        'Pool_2': {
+            'size_of_filter': (2,2)
+        },
+        'FC_1': {
+            'numb_of_nodes': 128,
+            'activation': 'relu'
+        },
+        'FC_2': {
+            'numb_of_nodes': 10,
+            'activation': 'softmax'
+        }
+    }
+
     model_1 = sequential_model(layers_1, 0.01, keras.losses.categorical_crossentropy, input_shape)
     history_1 = model_1.fit(x_train, y_train,
             batch_size=batch_size,
@@ -179,14 +266,42 @@ if __name__ == "__main__":
             verbose=1,
             validation_data=(x_test, y_test))
 
+    model_3 = sequential_model(layers_3, 0.01, keras.losses.categorical_crossentropy, input_shape)
+    history_3 = model_3.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1,
+            validation_data=(x_test, y_test))
+
+    model_4 = sequential_model(layers_4, 0.01, keras.losses.categorical_crossentropy, input_shape)
+    history_4 = model_4.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1,
+            validation_data=(x_test, y_test))
+
+    model_5 = sequential_model(layers_5, 0.01, keras.losses.categorical_crossentropy, input_shape)
+    history_5 = model_5.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1,
+            validation_data=(x_test, y_test))
+
+
     # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
     pyplot.subplot(211)
     pyplot.plot(history_1.history['acc'], marker='', color='green')
     pyplot.plot(history_2.history['acc'], marker='', color='blue')
+    pyplot.plot(history_3.history['acc'], marker='', color='green')
+    pyplot.plot(history_4.history['acc'], marker='', color='blue')
+    pyplot.plot(history_5.history['acc'], marker='', color='blue')
 
     pyplot.subplot(212)
     pyplot.plot(history_1.history['loss'], marker='', color='green')
     pyplot.plot(history_2.history['loss'], marker='', color='blue')
+    pyplot.plot(history_3.history['loss'], marker='', color='green')
+    pyplot.plot(history_4.history['loss'], marker='', color='blue')
+    pyplot.plot(history_5.history['loss'], marker='', color='blue')
 
     # with open('keras.csv', 'w') as csvfile:
     #     fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
