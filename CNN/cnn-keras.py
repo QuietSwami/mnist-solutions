@@ -180,7 +180,6 @@ if __name__ == "__main__":
             validation_data=(x_test, y_test))
 
     # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
-    print(history)
     pyplot.subplot(211)
     pyplot.plot(history.history_1['acc'], marker='', color='green')
     pyplot.plot(history.history_2['acc'], marker='', color='blue')
