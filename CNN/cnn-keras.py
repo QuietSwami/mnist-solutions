@@ -296,6 +296,7 @@ if __name__ == "__main__":
     a1.plot(history_3.history['acc'], marker='', color='red')
     a1.plot(history_4.history['acc'], marker='', color='pink')
     a1.plot(history_5.history['acc'], marker='', color='yellow')
+    a1.tight_layout()
     a1.title.set_text('Accuracy')
 
     a2 = pyplot.subplot(212)
@@ -304,6 +305,7 @@ if __name__ == "__main__":
     a2.plot(history_3.history['loss'], marker='', color='red')
     a2.plot(history_4.history['loss'], marker='', color='pink')
     a2.plot(history_5.history['loss'], marker='', color='yellow')
+    a2.tight_layout()
     a2.title.set_text('Loss')
 
     pyplot.suptitle('Epoch = 3')
