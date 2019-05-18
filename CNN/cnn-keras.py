@@ -59,7 +59,7 @@ if __name__ == "__main__":
     modelIteration = '1'
     batch_size = 128
     num_classes = 10
-    epochs = 5
+    epochs = 3
     num_layers = 2
     num_filters1 = 32
     num_filters2 = 64
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     
 
 
-    layers = {
+    layers_1 = {
         'Conv_1': {
             'filter': 32,
             'size_of_filter': (3,3),
@@ -136,24 +136,62 @@ if __name__ == "__main__":
         }
     }
 
-    model = sequential_model(layers, 0.01, keras.losses.categorical_crossentropy, input_shape)
-    history = model.fit(x_train, y_train,
+    layers_2 = {
+        'Conv_1': {
+            'filter': 2,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': True
+        },
+        'Pool_1': {
+            'size_of_filter': (2,2)
+        },
+        'Conv_2': {    
+            'filter': 4,
+            'size_of_filter': (3,3),
+            'activation': 'relu',
+            'is_input_shape': False
+        },
+        'Pool_2': {
+            'size_of_filter': (2,2)
+        },
+        'FC_1': {
+            'numb_of_nodes': 128,
+            'activation': 'relu'
+        },
+        'FC_2': {
+            'numb_of_nodes': 10,
+            'activation': 'softmax'
+        }
+    }
+
+    model_1 = sequential_model(layers, 0.01, keras.losses.categorical_crossentropy, input_shape)
+    history_1 = model_1.fit(x_train, y_train,
             batch_size=batch_size,
             epochs=epochs,
             verbose=1,
             validation_data=(x_test, y_test))
 
-    score = model.evaluate(x_test, y_test, verbose=1)
+    model_2= sequential_model(layers_2, 0.01, keras.losses.categorical_crossentropy, input_shape)
+    history_2 = model_2.fit(x_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1,
+            validation_data=(x_test, y_test))
+
+    # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
     print(history)
-    pyplot.plot(history.history['acc'], marker='', color='red', linestyle='dashed')
-    pyplot.plot(history.history['loss'], marker='', color='green')
+    pyplot.subplot(211)
+    pyplot.plot(history.history_1['acc'], marker='', color='red', linestyle='dashed')
 
-    with open('keras.csv', 'w') as csvfile:
-        fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    pyplot.subplot(212)
+    pyplot.plot(history.history_1['loss'], marker='', color='green')
+    # with open('keras.csv', 'w') as csvfile:
+    #     fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
+    #     writer = csv.DictWriter(csvfile))
 
-        writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
-            'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
-                'num_fc_nodes': num_nodes_fc1})
-    
+    #     writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
+    #         'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
+    #             'num_fc_nodes': num_nodes_fc1})
+
     pyplot.show()
