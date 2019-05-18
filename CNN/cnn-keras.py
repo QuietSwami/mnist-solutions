@@ -165,7 +165,7 @@ if __name__ == "__main__":
         }
     }
 
-    model_1 = sequential_model(layers, 0.01, keras.losses.categorical_crossentropy, input_shape)
+    model_1 = sequential_model(layers_1, 0.01, keras.losses.categorical_crossentropy, input_shape)
     history_1 = model_1.fit(x_train, y_train,
             batch_size=batch_size,
             epochs=epochs,
