@@ -290,6 +290,7 @@ if __name__ == "__main__":
 
     # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
     pyplot.subplot(211)
+    pyplot.tile('Accuracy')
     pyplot.plot(history_1.history['acc'], marker='', color='green')
     pyplot.plot(history_2.history['acc'], marker='', color='blue')
     pyplot.plot(history_3.history['acc'], marker='', color='red')
@@ -297,12 +298,14 @@ if __name__ == "__main__":
     pyplot.plot(history_5.history['acc'], marker='', color='yellow')
 
     pyplot.subplot(212)
+    pyplot.tile('Loss')
     pyplot.plot(history_1.history['loss'], marker='', color='green')
     pyplot.plot(history_2.history['loss'], marker='', color='blue')
     pyplot.plot(history_3.history['loss'], marker='', color='red')
     pyplot.plot(history_4.history['loss'], marker='', color='pink')
     pyplot.plot(history_5.history['loss'], marker='', color='yellow')
 
+    pyplot.suptitle('Epoch = 3')
     # with open('keras.csv', 'w') as csvfile:
     #     fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
     #     writer = csv.DictWriter(csvfile))
