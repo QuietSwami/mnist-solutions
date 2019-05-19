@@ -255,7 +255,7 @@ if __name__ == "__main__":
     dic = {}
 
 
-    for i in [1, 3, 5, 10]:
+    for i in [2,3,5,10]:
         dic[i] = []
         model_1 = sequential_model(layers_4, 1, keras.losses.categorical_crossentropy, input_shape)
         history_1 = model_1.fit(x_train, y_train,
@@ -291,11 +291,11 @@ if __name__ == "__main__":
                 epochs=i,
                 verbose=1,
                 validation_data=(x_test, y_test))
-        dic[i].append(history_1)
-        dic[i].append(history_2)
-        dic[i].append(history_3)
-        dic[i].append(history_4)
-        dic[i].append(history_5)
+        dic[i].append([history_1, 'green', '1'])
+        dic[i].append([history_2, 'blue', '0.1'])
+        dic[i].append([history_3, 'red', '0.01'])
+        dic[i].append([history_4, 'cyan', '0.001'])
+        dic[i].append([history_5, 'black', '0.0001'])
 
 
     # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
@@ -303,44 +303,14 @@ if __name__ == "__main__":
     plots = [a1, a2, a3, a4]
 
     for i in range(len(dic.keys())):
-        plots[i].plot(dic[dic.keys()[i]].history['acc'], marker='', color='green', linestyle=':')
-        plots[i].plot(dic[dic.keys()[i]].history['acc'], marker='', color='blue', linestyle='-.')
-        plots[i].plot(dic[dic.keys()[i]].history['acc'], marker='', color='red', linestyle='--')
-        plots[i].plot(dic[dic.keys()[i]].history['acc'], marker='', color='pink', linestyle='-')
-        plots[i].plot(dic[dic.keys()[i]].history['acc'], marker='', color='yellow')
-        plots[i].title.set_text('Epoch = ' + str(i))
+        for j in dic[list(dic.keys())[i]]:
+            plots[i].plot(j[0].history['acc'], marker='', color=j[1], label=j[2])
+        
+        plots[i].title.set_text('Epoch = ' + str(list(dic.keys())[i]))
+    fig.legend(loc='upper left')
 
-
-    # a2.plot(history_1.history['loss'], marker='', color='green', linestyle=':')
-    # a2.plot(history_2.history['loss'], marker='', color='blue', linestyle='-.')
-    # a2.plot(history_3.history['loss'], marker='', color='red', linestyle='--')
-    # a2.plot(history_4.history['loss'], marker='', color='pink', linestyle='-')
-    # a2.plot(history_5.history['loss'], marker='', color='yellow')
-    # a2.title.set_text('Loss')
-
-    # a3.plot(history_1.history['val_acc'], marker='', color='green', linestyle=':')
-    # a3.plot(history_2.history['val_acc'], marker='', color='blue', linestyle='-.')
-    # a3.plot(history_3.history['val_acc'], marker='', color='red', linestyle='--')
-    # a3.plot(history_4.history['val_acc'], marker='', color='pink', linestyle='-')
-    # a3.plot(history_5.history['val_acc'], marker='', color='yellow')
-    # a3.title.set_text('Val Accuracy')
-
-    # a4.plot(history_1.history['val_loss'], marker='', color='green', linestyle=':')
-    # a4.plot(history_2.history['val_loss'], marker='', color='blue', linestyle='-.')
-    # a4.plot(history_3.history['val_loss'], marker='', color='red', linestyle='--')
-    # a4.plot(history_4.history['val_loss'], marker='', color='pink', linestyle='-')
-    # a4.plot(history_5.history['val_loss'], marker='', color='yellow')
-    # a4.title.set_text('Val Loss')
-    
     fig.tight_layout()
 
     fig.suptitle('Difference of learning rates.')
-    # with open('keras.csv', 'w') as csvfile:
-    #     fieldnames = ['model_name', 'model_iteration', 'batch_size', 'epoch', 'accuracy', 'loss', 'num_layers', 'num_filters', 'num_fc_nodes'] 
-    #     writer = csv.DictWriter(csvfile))
-
-    #     writer.writerow({'model_name': testName, 'model_iteration': modelIteration, 'batch_size': batch_size, \
-    #         'epoch': epochs, 'accuracy': score[1], 'loss': score[0], 'num_layers': num_layers, 'num_filters': str(num_filters1) + '_' + str(num_filters2), \
-    #             'num_fc_nodes': num_nodes_fc1})
 
     pyplot.show()
