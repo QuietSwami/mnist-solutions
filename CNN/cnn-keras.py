@@ -54,6 +54,7 @@ def sequential_model(layers, learning_rate, loss_type, input_shape):
     return model
 
 if __name__ == "__main__":
+    
 
 
     testName = 'cnn-keras2'
