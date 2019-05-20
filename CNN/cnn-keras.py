@@ -55,11 +55,11 @@ def sequential_model(layers, learning_rate, loss_type, input_shape):
 
 if __name__ == "__main__":
 
-    testName = 'cnn-keras1'
+
+    testName = 'cnn-keras2'
     modelIteration = '1'
     batch_size = 128
     num_classes = 10
-    epochs = 10
     num_layers = 2
     num_filters1 = 32
     num_filters2 = 64
@@ -254,63 +254,20 @@ if __name__ == "__main__":
 
     dic = {}
 
+    results = {'batch_size': batch_size}
 
     for i in [2,3,5,10]:
         dic[i] = []
-        model_1 = sequential_model(layers_4, 1, keras.losses.categorical_crossentropy, input_shape)
-        history_1 = model_1.fit(x_train, y_train,
-                batch_size=batch_size,
-                epochs=i,
-                verbose=1,
-                validation_data=(x_test, y_test))
+        for j in [layers_1, layers_2, layers_3, layers_4, layers_5]:
+            model_1 = sequential_model(j, 0.01, keras.losses.categorical_crossentropy, input_shape)
+            history_1 = model_1.fit(x_train, y_train,
+                    batch_size=batch_size,
+                    epochs=i,
+                    verbose=1,
+                    validation_data=(x_test, y_test))
+            dic[i].append([history_1])
+            results['epoch_' + str(i)] = j
 
-        model_2= sequential_model(layers_4, 0.1, keras.losses.categorical_crossentropy, input_shape)
-        history_2 = model_2.fit(x_train, y_train,
-                batch_size=batch_size,
-                epochs=i,
-                verbose=1,
-                validation_data=(x_test, y_test))
-
-        model_3 = sequential_model(layers_4, 0.01, keras.losses.categorical_crossentropy, input_shape)
-        history_3 = model_3.fit(x_train, y_train,
-                batch_size=batch_size,
-                epochs=i,
-                verbose=1,
-                validation_data=(x_test, y_test))
-
-        model_4 = sequential_model(layers_4, 0.001, keras.losses.categorical_crossentropy, input_shape)
-        history_4 = model_4.fit(x_train, y_train,
-                batch_size=batch_size,
-                epochs=i,
-                verbose=1,
-                validation_data=(x_test, y_test))
-
-        model_5 = sequential_model(layers_4, 0.0001, keras.losses.categorical_crossentropy, input_shape)
-        history_5 = model_5.fit(x_train, y_train,
-                batch_size=batch_size,
-                epochs=i,
-                verbose=1,
-                validation_data=(x_test, y_test))
-        dic[i].append([history_1, 'green', '1'])
-        dic[i].append([history_2, 'blue', '0.1'])
-        dic[i].append([history_3, 'red', '0.01'])
-        dic[i].append([history_4, 'cyan', '0.001'])
-        dic[i].append([history_5, 'black', '0.0001'])
-
-
-    # score_2 = model_2.evaluate(x_test, y_test, verbose=1)
-    fig, ((a1, a2), (a3, a4)) = pyplot.subplots(2,2)
-    plots = [a1, a2, a3, a4]
-
-    for i in range(len(dic.keys())):
-        for j in dic[list(dic.keys())[i]]:
-            plots[i].plot(j[0].history['acc'], marker='', color=j[1], label=j[2])
-        
-        plots[i].title.set_text('Epoch = ' + str(list(dic.keys())[i]))
-    fig.legend(loc='upper left')
-
-    fig.tight_layout()
-
-    fig.suptitle('Difference of learning rates.')
-
-    pyplot.show()
+    with open(testName +'.json', 'w') as f:
+        f.write(json.dumps(results))
+        f.close()
